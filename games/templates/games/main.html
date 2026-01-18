@@ -3,103 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piro Game - Welcome</title>
+    <title>Piro Card Game - Main</title>
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        body { margin: 0; font-family: 'Pretendard', sans-serif; background-color: #f3a683; }
-
-        /* 보라색 상단바 */
-        header {
-            background-color: #483475;
-            color: white;
-            padding: 15px 50px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .logo { font-weight: 800; font-size: 1.1rem; }
-        nav a { color: #f3a683; text-decoration: none; margin-left: 20px; font-size: 0.9rem; font-weight: 600; }
-        /* 로그인 버튼 강조 */
-        .nav-login { background-color: #f3a683; color: #483475 !important; padding: 5px 15px; border-radius: 15px; }
-
-        /* 메인 영역 */
-        .hero {
-            height: 80vh;
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .user-info {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            text-align: center;
+            background: white;
+            padding: 60px 80px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .welcome-msg {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .username {
+            color: #764ba2;
+            font-weight: bold;
+        }
+        
+        .btn-group {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(transparent 60%, #7158a1 90%);
-            color: #483475;
+            gap: 15px;
         }
-
-        h1 { font-size: 5rem; margin: 0; font-weight: 900; letter-spacing: -2px; }
-        .user-status { margin-top: 20px; font-size: 1.1rem; color: #483475; }
-
-        /* 버튼 그룹 */
-        .btn-group { margin-top: 30px; display: flex; gap: 15px; }
+        
         .btn {
-            background-color: #483475;
-            color: #f3a683;
+            padding: 15px 40px;
+            font-size: 18px;
             border: none;
-            padding: 12px 40px;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
-            transition: 0.2s;
+            display: inline-block;
+            font-weight: 600;
         }
-        .btn:hover { transform: scale(1.05); background-color: #5f4791; }
-
-        footer {
-            background-color: #483475; color: #7158a1;
-            text-align: right; padding: 10px 50px;
-            font-size: 0.8rem; position: fixed; bottom: 0; width: 100%; box-sizing: border-box;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-
-<header>
-    <div class="logo">Pirogrammer Card Game</div>
     <nav>
-        {% if user.is_authenticated %}
-            <a href="#">게임하기</a>
-            <a href="#">랭킹보기</a>
-            <a href="{% url 'account_logout' %}">로그아웃</a>
-        {% else %}
-            <a href="{% url 'account_login' %}" class="nav-login">로그인</a>
-            <a href="{% url 'account_signup' %}">회원가입</a>
-        {% endif %}
+        <div class="nav-brand">🃏 Piro Game</div>
+        <div class="nav-links">
+            <a href="{% url 'games:main' %}">메인</a>
+            <a href="{% url 'games:list' %}">게임 전적</a>
+            <a href="{% url 'games:ranking' %}">랭킹</a>
+            <span class="user-info">{{ user.username }}님 환영합니다</span>
+            <a href="/accounts/logout/">로그아웃</a>
+        </div>
     </nav>
-</header>
-
-<div class="hero">
-    <h1>Piro Game</h1>
     
-    {% if user.is_authenticated %}
-        <div class="user-status">
-            <strong>{{ user.username }}</strong>님이 로그인 중
-        </div>
+    <div class="container">
+        <h1>🃏 Piro Game</h1>
+        <p class="welcome-msg">
+            <span class="username">{{ user.username }}</span>님, 환영합니다!
+        </p>
+        
         <div class="btn-group">
-            <a href="#" class="btn">start</a>
-            <a href="#" class="btn">list</a>
+            <a href="{% url 'games:attack' %}" class="btn btn-primary">🎮 게임 시작</a>
+            <a href="{% url 'games:list' %}" class="btn btn-secondary">📋 게임 전적</a>
         </div>
-    {% else %}
-        <div class="user-status">
-            로그인 후 게임을 시작해보세요!
-        </div>
-        <div class="btn-group">
-            <a href="{% url 'account_login' %}" class="btn">게임 시작하기</a>
-        </div>
-    {% endif %}
-</div>
-
-<footer>
-    피로그래밍 24기 카드게임 세션 2조
-</footer>
-
+    </div>
 </body>
 </html>

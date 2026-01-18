@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 상세</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #667eea, transparent);
+            margin: 30px 0;
+        }
+        
+        .cards-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+        
+        .card-wrapper {
+            text-align: center;
+        }
+        
+        .card-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .card {
+            width: 120px;
+            height: 160px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+            font-weight: bold;
+            color: #667eea;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card.hidden {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+            border-color: #95a5a6;
+        }
+        
+        .result-section {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .result-title {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        /* 게임 룰 표시 */
+        .rule-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 15px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .rule-explanation {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .result-winner {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .winner-attacker {
+            color: #e74c3c;
+        }
+        
+        .winner-defender {
+            color: #3498db;
+        }
+        
+        .winner-draw {
+            color: #95a5a6;
+        }
+        
+        .score-change {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .score-positive {
+            color: #27ae60;
+        }
+        
+        .score-negative {
+            color: #e74c3c;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .pending-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">🃏 Piro Game</div>
+        <div class="nav-links">
+            <a href="{% url 'games:main' %}">메인</a>
+            <a href="{% url 'games:list' %}">게임 전적</a>
+            <a href="{% url 'games:ranking' %}">랭킹</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>🎮 게임 상세 정보</h1>
+        
+        <div class="info-grid">
+            <div class="info-label">게임 ID:</div>
+            <div class="info-value">{{ game.id }}</div>
+            
+            <div class="info-label">공격자:</div>
+            <div class="info-value">{{ game.attacker.username }}</div>
+            
+            <div class="info-label">수비자:</div>
+            <div class="info-value">{{ game.defender.username }}</div>
+            
+            <div class="info-label">상태:</div>
+            <div class="info-value">{{ game.get_status_display }}</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="cards-display">
+            <div class="card-wrapper">
+                <div class="card-label">⚔️ 공격 카드</div>
+                <div class="card">{{ game.attacker_card }}</div>
+            </div>
+            
+            <div class="card-wrapper">
+                <div class="card-label">🛡️ 반격 카드</div>
+                {% if game.defender_card %}
+                    <div class="card">{{ game.defender_card }}</div>
+                {% else %}
+                    <div class="card hidden">?</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if game.status == 'FINISHED' %}
+            <div class="result-section">
+                <div class="result-title">📊 게임 결과</div>
+                
+                <!-- 게임 룰 표시 -->
+                <div class="rule-badge">
+                    {% if game.rule == 'BIGGER_WINS' %}
+                        📈 큰 숫자가 승리
+                    {% else %}
+                        📉 작은 숫자가 승리
+                    {% endif %}
+                </div>
+                <div class="rule-explanation">
+                    {% if game.rule == 'BIGGER_WINS' %}
+                        이번 게임은 더 큰 카드 숫자를 낸 사람이 이기는 룰이었습니다
+                    {% else %}
+                        이번 게임은 더 작은 카드 숫자를 낸 사람이 이기는 룰이었습니다
+                    {% endif %}
+                </div>
+                
+                <div class="result-winner 
+                    {% if game.winner == 'ATTACKER' %}winner-attacker
+                    {% elif game.winner == 'DEFENDER' %}winner-defender
+                    {% else %}winner-draw{% endif %}">
+                    {% if game.winner == 'ATTACKER' %}
+                        🏆 공격자 승리!
+                    {% elif game.winner == 'DEFENDER' %}
+                        🏆 수비자 승리!
+                    {% else %}
+                        🤝 무승부!
+                    {% endif %}
+                </div>
+                
+                <div style="margin: 20px 0; color: #666;">
+                    {{ game.attacker.username }}의 카드 <strong>{{ game.attacker_card }}</strong>
+                    vs 
+                    {{ game.defender.username }}의 카드 <strong>{{ game.defender_card }}</strong>
+                </div>
+                
+                <div class="score-change">
+                    <strong>{{ game.attacker.username }}:</strong> 
+                    <span class="{% if game.attacker_delta > 0 %}score-positive{% elif game.attacker_delta < 0 %}score-negative{% endif %}">
+                        {{ game.attacker_delta|stringformat:"+d" }}점
+                    </span>
+                </div>
+                
+                <div class="score-change">
+                    <strong>{{ game.defender.username }}:</strong> 
+                    <span class="{% if game.defender_delta > 0 %}score-positive{% elif game.defender_delta < 0 %}score-negative{% endif %}">
+                        {{ game.defender_delta|stringformat:"+d" }}점
+                    </span>
+                </div>
+            </div>
+        {% else %}
+            <div class="pending-message">
+                ⏳ 게임이 아직 진행중입니다
+            </div>
+        {% endif %}
+        
+        <div class="btn-group">
+            {% if can_counter %}
+                <a href="{% url 'games:counter' game.id %}" class="btn btn-primary">
+                    ⚡ 반격하러 가기
+                </a>
+            {% endif %}
+            
+            <a href="{% url 'games:list' %}" class="btn btn-secondary">
+                📋 게임 목록
+            </a>
+            
+            <a href="{% url 'games:ranking' %}" class="btn btn-secondary">
+                🏆 랭킹 보기
+            </a>
+        </div>
+    </div>
+</body>
+</html>
