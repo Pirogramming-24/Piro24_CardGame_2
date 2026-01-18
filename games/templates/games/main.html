@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piro Game - Welcome</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { margin: 0; font-family: 'Pretendard', sans-serif; background-color: #f3a683; }
+
+        /* 보라색 상단바 */
+        header {
+            background-color: #483475;
+            color: white;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 800; font-size: 1.1rem; }
+        nav a { color: #f3a683; text-decoration: none; margin-left: 20px; font-size: 0.9rem; font-weight: 600; }
+        /* 로그인 버튼 강조 */
+        .nav-login { background-color: #f3a683; color: #483475 !important; padding: 5px 15px; border-radius: 15px; }
+
+        /* 메인 영역 */
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(transparent 60%, #7158a1 90%);
+            color: #483475;
+        }
+
+        h1 { font-size: 5rem; margin: 0; font-weight: 900; letter-spacing: -2px; }
+        .user-status { margin-top: 20px; font-size: 1.1rem; color: #483475; }
+
+        /* 버튼 그룹 */
+        .btn-group { margin-top: 30px; display: flex; gap: 15px; }
+        .btn {
+            background-color: #483475;
+            color: #f3a683;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); background-color: #5f4791; }
+
+        footer {
+            background-color: #483475; color: #7158a1;
+            text-align: right; padding: 10px 50px;
+            font-size: 0.8rem; position: fixed; bottom: 0; width: 100%; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Pirogrammer Card Game</div>
+    <nav>
+        {% if user.is_authenticated %}
+            <a href="#">게임하기</a>
+            <a href="#">랭킹보기</a>
+            <a href="{% url 'account_logout' %}">로그아웃</a>
+        {% else %}
+            <a href="{% url 'account_login' %}" class="nav-login">로그인</a>
+            <a href="{% url 'account_signup' %}">회원가입</a>
+        {% endif %}
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Piro Game</h1>
+    
+    {% if user.is_authenticated %}
+        <div class="user-status">
+            <strong>{{ user.username }}</strong>님이 로그인 중
+        </div>
+        <div class="btn-group">
+            <a href="#" class="btn">start</a>
+            <a href="#" class="btn">list</a>
+        </div>
+    {% else %}
+        <div class="user-status">
+            로그인 후 게임을 시작해보세요!
+        </div>
+        <div class="btn-group">
+            <a href="{% url 'account_login' %}" class="btn">게임 시작하기</a>
+        </div>
+    {% endif %}
+</div>
+
+<footer>
+    피로그래밍 24기 카드게임 세션 2조
+</footer>
+
+</body>
+</html>
