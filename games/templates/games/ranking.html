@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랭킹</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ranking-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.01);
+        }
+        
+        td {
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .rank-cell {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .rank-1 {
+            color: #f39c12;
+        }
+        
+        .rank-2 {
+            color: #95a5a6;
+        }
+        
+        .rank-3 {
+            color: #cd7f32;
+        }
+        
+        .score-positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .score-negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .score-zero {
+            color: #95a5a6;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .medal {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+        
+        .back-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 15px;
+            background: white;
+            color: #667eea;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">🃏 Piro Game</div>
+        <div class="nav-links">
+            <a href="{% url 'games:main' %}">메인</a>
+            <a href="{% url 'games:list' %}">게임 전적</a>
+            <a href="{% url 'games:ranking' %}">랭킹</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>🏆 유저 랭킹</h1>
+        
+        <div class="ranking-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>유저</th>
+                        <th>점수</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if rankings %}
+                        {% for player_score in rankings %}
+                            <tr>
+                                <td class="rank-cell {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% endif %}">
+                                    {% if forloop.counter == 1 %}
+                                        <span class="medal">🥇</span>
+                                    {% elif forloop.counter == 2 %}
+                                        <span class="medal">🥈</span>
+                                    {% elif forloop.counter == 3 %}
+                                        <span class="medal">🥉</span>
+                                    {% endif %}
+                                    {{ forloop.counter }}
+                                </td>
+                                <td>{{ player_score.user.username }}</td>
+                                <td class="{% if player_score.score > 0 %}score-positive{% elif player_score.score < 0 %}score-negative{% else %}score-zero{% endif %}">
+                                    {{ player_score.score }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="empty-message">
+                                아직 랭킹 데이터가 없습니다
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="{% url 'games:main' %}" class="back-btn">메인으로 돌아가기</a>
+    </div>
+</body>
+</html>
