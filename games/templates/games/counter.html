@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>반격 테스트</title>
+</head>
+<body>
+    <h1>반격 카드 선택</h1>
+
+    <p>게임 ID: {{ game.id }}</p>
+    <p>공격자 카드: {{ game.attacker_card }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for card in cards %}
+            <button type="submit" name="card" value="{{ card }}">
+                카드 {{ card }}
+            </button>
+        {% endfor %}
+    </form>
+
+    <p>※ 버튼을 누르면 즉시 반격이 확정됩니다.</p>
+</body>
+</html>

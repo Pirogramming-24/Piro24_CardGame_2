@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>랭킹</title>
+</head>
+<body>
+    <h1>유저 랭킹</h1>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>순위</th>
+                <th>유저</th>
+                <th>점수</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for score in scores %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ score.user.username }}</td>
+                    <td>{{ score.score }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">랭킹 데이터 없음</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/">메인으로</a>
+</body>
+</html>

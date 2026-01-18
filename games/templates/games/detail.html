@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게임 상세</title>
+</head>
+<body>
+    <h1>게임 상세 정보</h1>
+
+    <p><strong>게임 ID:</strong> {{ game.id }}</p>
+    <p><strong>공격자:</strong> {{ game.attacker.username }}</p>
+    <p><strong>수비자:</strong> {{ game.defender.username }}</p>
+
+    <hr>
+
+    <p><strong>공격 카드:</strong> {{ game.attacker_card }}</p>
+    <p><strong>반격 카드:</strong> {{ game.defender_card }}</p>
+
+    <p><strong>승부 규칙:</strong> {{ game.rule }}</p>
+    <p><strong>승자:</strong> {{ game.winner }}</p>
+
+    <p><strong>공격자 점수 변화:</strong> {{ game.attacker_delta }}</p>
+    <p><strong>수비자 점수 변화:</strong> {{ game.defender_delta }}</p>
+
+    <hr>
+
+    {% if can_counter %}
+        <a href="{% url 'games:counter' game.id %}">
+            👉 반격하러 가기
+        </a>
+    {% else %}
+        <p>※ 반격 불가 상태</p>
+    {% endif %}
+
+    <br><br>
+
+    <a href="{% url 'games:ranking' %}">
+        📊 랭킹 보기
+    </a>
+</body>
+</html>
