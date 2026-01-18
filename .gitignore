@@ -1,5 +1,100 @@
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
 venv/
 .venv/
-__pycache__/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+*.log
+*.pot
 *.pyc
+__pycache__/
+local_settings.py
 db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Django migrations (선택적 - 팀 정책에 따라 조정)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.hypothesis/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Backup files
+*.bak
+*.swp
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Secret files
+secrets.json
+*.pem
+*.key
+
+# Docker (프로젝트에서 Docker 사용 시)
+# docker-compose.override.yml
+
+# Static and Media (배포 시)
+# /static/
+# /media/

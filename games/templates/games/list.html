@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 전적</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .games-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .game-item {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr;
+            align-items: center;
+            padding: 20px 25px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            gap: 20px;
+        }
+        
+        .game-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* 왼쪽: 게임 참가자 */
+        .game-players {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .player-name {
+            color: #333;
+        }
+        
+        .player-me {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .vs-text {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* 가운데: 게임 상태/결과 */
+        .game-status {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+        
+        .status-waiting {
+            background: #ff7675;
+            color: white;
+        }
+        
+        .status-finished {
+            background: #55efc4;
+            color: #00b894;
+        }
+        
+        .game-detail {
+            color: #666;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .result-win {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .result-lose {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .result-draw {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        /* 오른쪽: 액션 버튼 */
+        .game-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: stretch;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .btn-detail {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-detail:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-counter {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-counter:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-delete {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 60px;
+            font-size: 18px;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">🃏 Piro Game</div>
+        <div class="nav-links">
+            <a href="{% url 'games:main' %}">메인</a>
+            <a href="{% url 'games:list' %}">게임 전적</a>
+            <a href="{% url 'games:ranking' %}">랭킹</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>📋 게임 전적</h1>
+        
+        <div class="games-container">
+            <div class="game-list">
+                {% if games %}
+                    {% for game in games %}
+                        <div class="game-item">
+                            <!-- 왼쪽: 게임 참가자 -->
+                            <div class="game-players">
+                                <span class="{% if game.attacker == user %}player-me{% else %}player-name{% endif %}">
+                                    {{ game.attacker.username }}
+                                </span>
+                                <span class="vs-text">VS</span>
+                                <span class="{% if game.defender == user %}player-me{% else %}player-name{% endif %}">
+                                    {{ game.defender.username }}
+                                </span>
+                            </div>
+                            
+                            <!-- 가운데: 상태/결과 -->
+                            <div class="game-status">
+                                {% if game.status == 'PENDING' %}
+                                    {% if game.attacker == user %}
+                                        <!-- 내가 공격자 - 진행중 -->
+                                        <span class="status-badge status-pending">진행중</span>
+                                        <div class="game-detail">
+                                            선택 카드: {{ game.attacker_card }} | 상대 응답 대기중
+                                        </div>
+                                    {% else %}
+                                        <!-- 내가 수비자 - 반격 대기 -->
+                                        <span class="status-badge status-waiting">반격 대기</span>
+                                        <div class="game-detail">
+                                            상대 카드: {{ game.attacker_card }} | 반격하세요!
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <!-- 종료된 게임 -->
+                                    <span class="status-badge status-finished">완료</span>
+                                    
+                                    {% if game.winner == 'ATTACKER' %}
+                                        {% if game.attacker == user %}
+                                            <span class="result-badge result-win">🏆 승리</span>
+                                        {% else %}
+                                            <span class="result-badge result-lose">패배</span>
+                                        {% endif %}
+                                    {% elif game.winner == 'DEFENDER' %}
+                                        {% if game.defender == user %}
+                                            <span class="result-badge result-win">🏆 승리</span>
+                                        {% else %}
+                                            <span class="result-badge result-lose">패배</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="result-badge result-draw">무승부</span>
+                                    {% endif %}
+                                    
+                                    <div class="game-detail">
+                                        카드: {{ game.attacker_card }} vs {{ game.defender_card }} | 
+                                        {{ game.get_rule_display }} | 
+                                        {% if game.attacker == user %}
+                                            {{ game.attacker_delta|stringformat:"+d" }}점
+                                        {% else %}
+                                            {{ game.defender_delta|stringformat:"+d" }}점
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- 오른쪽: 액션 버튼 -->
+                            <div class="game-actions">
+                                {% if game.status == 'PENDING' %}
+                                    {% if game.attacker == user %}
+                                        <!-- 내가 공격자 - 취소 가능 -->
+                                        <a href="{% url 'games:detail' game.id %}" class="btn btn-detail">게임정보</a>
+                                        <form method="post" action="{% url 'games:delete' game.id %}" 
+                                              style="margin: 0;"
+                                              onsubmit="return confirm('정말 이 게임을 취소하시겠습니까?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-delete" style="width: 100%;">게임취소</button>
+                                        </form>
+                                    {% else %}
+                                        <!-- 내가 수비자 - 반격 가능 -->
+                                        <a href="{% url 'games:counter' game.id %}" class="btn btn-counter">반격하기</a>
+                                        <a href="{% url 'games:detail' game.id %}" class="btn btn-detail">게임정보</a>
+                                    {% endif %}
+                                {% else %}
+                                    <!-- 종료된 게임 - 정보만 -->
+                                    <a href="{% url 'games:detail' game.id %}" class="btn btn-detail">게임정보</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-message">
+                        <div class="empty-icon">🎮</div>
+                        <div>아직 게임 전적이 없습니다</div>
+                        <div style="margin-top: 10px; font-size: 14px; color: #bbb;">
+                            게임을 시작해보세요!
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
