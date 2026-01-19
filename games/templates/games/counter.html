@@ -3,233 +3,242 @@
 
 {% block content %}
 <section class="atk">
-  <div class="atk__stage">
-    <div class="atk__panel">
-      <h1 class="atk__headline">반격하기</h1>
+    <div class="atk__stage">
+        <div class="atk__panel">
+            <h1 class="atk__headline">반격하기</h1>
 
-      <!-- 게임 요약(attack의 흐름 유지) -->
-      <div class="counter-info">
-        <div class="counter-title">{{ game.attacker.username }} VS {{ game.defender.username }}</div>
-        <div class="counter-line" aria-hidden="true"></div>
+            <!-- 게임 요약(attack의 흐름 유지) -->
+            <div class="counter-info">
+                <div class="counter-title">{{ game.attacker.username }} VS {{ game.defender.username }}</div>
+                <div class="counter-line" aria-hidden="true"></div>
 
 
-        <p class="counter-warn">⚠️카드를 선택하면 즉시 게임 결과가 결정됩니다!</p>
-      </div>
+                <p class="counter-warn">⚠️카드를 선택하면 즉시 게임 결과가 결정됩니다!</p>
+            </div>
 
-      <form method="post" class="atk__form" id="counterForm">
-        {% csrf_token %}
+            <form method="post" class="atk__form" id="counterForm">
+                {% csrf_token %}
 
-        <!-- 카드 선택: attack과 동일한 카드형식 -->
-        <div class="atk__block">
-          <div class="cards" role="list">
-            {% for n in cards %}
-              <label class="cardpick" role="listitem">
-                <input class="cardpick__input" type="radio" name="card" value="{{ n }}" required>
-                <span class="cardpick__face">{{ n }}</span>
-              </label>
-            {% endfor %}
-          </div>
+                <!-- 카드 선택: attack과 동일한 카드형식 -->
+                <div class="atk__block">
+                    <div class="cards" role="list">
+                        {% for n in cards %}
+                        <label class="cardpick" role="listitem">
+                            <input class="cardpick__input" type="radio" name="card" value="{{ n }}" required>
+                            <span class="cardpick__face">{{ n }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button class="atk__btn" type="submit" id="submitBtn" disabled>COUNTER</button>
+                <p class="atk__hint" id="hintText"></p>
+            </form>
         </div>
-
-        <button class="atk__btn" type="submit" id="submitBtn" disabled>COUNTER</button>
-        <p class="atk__hint" id="hintText"></p>
-      </form>
     </div>
-  </div>
 </section>
 
 <style>
-  /* ===== attack.html 스타일 그대로 ===== */
-  .atk{ width: 100%; }
+    /* ===== attack.html 스타일 그대로 ===== */
+    .atk {
+        width: 100%;
+    }
 
-  .atk__stage{
-    position: relative;
-    min-height: calc(100vh - 80px);
-    padding: 56px 16px;
-    display: grid;
-    place-items: center;
-  }
+    .atk__stage {
+        position: relative;
+        min-height: calc(100vh - 80px);
+        padding: 56px 16px;
+        display: grid;
+        place-items: center;
+    }
 
-  .atk__panel{
-    position: relative;
-    width: min(420px, 92vw);
-    background: #F7F6F2;
-    border-radius: 10px;
-    padding: 26px 26px 22px;
-    backdrop-filter: blur(6px);
-  }
+    .atk__panel {
+        position: relative;
+        width: min(420px, 92vw);
+        background: #F7F6F2;
+        border-radius: 10px;
+        padding: 26px 26px 22px;
+        backdrop-filter: blur(6px);
+    }
 
-  .atk__headline{
-    margin: 0 0 22px;
-    text-align: center;
-    font-size: 25px;
-    font-weight: 800;
-    color: #111;
-  }
+    .atk__headline {
+        margin: 0 0 22px;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 800;
+        color: #111;
+    }
 
-  .atk__form{
-    display: grid;
-    gap: 16px;
-  }
+    .atk__form {
+        display: grid;
+        gap: 16px;
+    }
 
-  .atk__block{
-    display: grid;
-    gap: 10px;
-  }
+    .atk__block {
+        display: grid;
+        gap: 10px;
+    }
 
-  /* 카드 선택 UI */
-  .cards{
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 2px;
-  }
+    /* 카드 선택 UI */
+    .cards {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: nowrap;
+        margin-top: 2px;
+    }
 
-  .cardpick{
-    cursor: pointer;
-    user-select: none;
-  }
+    .cardpick {
+        cursor: pointer;
+        user-select: none;
+    }
 
-  .cardpick__input{
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
+    .cardpick__input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
 
-  .cardpick__face{
-    width: 66px;
-    height: 92px;
-    display: grid;
-    place-items: center;
-    border-radius: 8px;
+    .cardpick__face {
+        width: 66px;
+        height: 92px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
 
-    font-size: 30px;
-    font-weight: 900;
-    color: #000;
-    background: #fff;
-  }
+        font-size: 30px;
+        font-weight: 900;
+        color: #000;
+        background: #fff;
+    }
 
-  .cardpick:hover .cardpick__face{
-    transform: translateY(-3px);
-    background: #f7f8ff;
-  }
+    .cardpick:hover .cardpick__face {
+        transform: translateY(-3px);
+        background: #f7f8ff;
+    }
 
-  .cardpick__input:checked + .cardpick__face{
-    color: #000;
-    transform: translateY(-5px);
-  }
+    .cardpick__input:checked+.cardpick__face {
+        color: #000;
+        transform: translateY(-5px);
+    }
 
-  /* 버튼 */
-  .atk__btn{
-    height: 50px;
-    width: 180px;
-    border: none;
-    border-radius: 999px;
-    background: #025309;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: .5px;
-    cursor: pointer;
-    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
-    justify-self: center;
-  }
+    /* 버튼 */
+    .atk__btn {
+        height: 50px;
+        width: 180px;
+        border: none;
+        border-radius: 999px;
+        background: #025309;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+        justify-self: center;
+    }
 
-  .atk__btn:hover:not(:disabled){
-    transform: translateY(-1px);
-  }
+    .atk__btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+    }
 
-  .atk__btn:disabled{
-    opacity: .45;
-    cursor: not-allowed;
-  }
+    .atk__btn:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+    }
 
-  .atk__hint{
-    margin: 0;
-    text-align: center;
-    font-weight: 700;
-    color: rgba(0,0,0,.55);
-    min-height: 16px;
-  }
+    .atk__hint {
+        margin: 0;
+        text-align: center;
+        font-weight: 700;
+        color: rgba(0, 0, 0, .55);
+        min-height: 16px;
+    }
 
-  /* ===== counter 전용: 게임 요약 박스 ===== */
-  .counter-info{
-    display: grid;
-    gap: 10px;
-    margin: 0 0 16px;
-  }
+    /* ===== counter 전용: 게임 요약 박스 ===== */
+    .counter-info {
+        display: grid;
+        gap: 10px;
+        margin: 0 0 16px;
+    }
 
-  .counter-title{
-    text-align: center;
-    font-size: 20px;
-    font-weight: 900;
-    color: #111;
-  }
+    .counter-title {
+        text-align: center;
+        font-size: 20px;
+        font-weight: 900;
+        color: #111;
+    }
 
-  .counter-line{
-    height: 2px;
-    width: 100%;
-    background: rgba(0,0,0,.65);
-    border-radius: 2px;
-    margin-top: -4px;
-  }
+    .counter-line {
+        height: 2px;
+        width: 100%;
+        background: rgba(0, 0, 0, .65);
+        border-radius: 2px;
+        margin-top: -4px;
+    }
 
 
-  .counter-row{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+    .counter-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 
-  .counter-row + .counter-row{
-    border-top: 2px solid rgba(0,0,0,.10);
-  }
+    .counter-row+.counter-row {
+        border-top: 2px solid rgba(0, 0, 0, .10);
+    }
 
-  .counter-key, .counter-val{
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 14px;
-  }
+    .counter-key,
+    .counter-val {
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 14px;
+    }
 
-  .counter-key{
-    color: rgba(0,0,0,.75);
-    background: rgba(0,0,0,.02);
-  }
+    .counter-key {
+        color: rgba(0, 0, 0, .75);
+        background: rgba(0, 0, 0, .02);
+    }
 
-  .counter-val{ color: #111; }
-  .counter-val--red{ color: #d12c2c; font-size: 20px; }
+    .counter-val {
+        color: #111;
+    }
 
-  .counter-warn{
-    margin: 4px 0 0;
-    text-align: center;
-    font-size: 15px;
-    font-weight: 800;
-    color: rgba(0,0,0,.55);
-  }
+    .counter-val--red {
+        color: #d12c2c;
+        font-size: 20px;
+    }
+
+    .counter-warn {
+        margin: 4px 0 0;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 800;
+        color: rgba(0, 0, 0, .55);
+    }
 </style>
 
 <script>
-  (function () {
-    const form = document.getElementById("counterForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const hintText = document.getElementById("hintText");
+    (function () {
+        const form = document.getElementById("counterForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const hintText = document.getElementById("hintText");
 
-    function sync() {
-      const picked = form.querySelector('input[name="card"]:checked');
-      const ok = !!picked;
-      submitBtn.disabled = !ok;
-    }
+        function sync() {
+            const picked = form.querySelector('input[name="card"]:checked');
+            const ok = !!picked;
+            submitBtn.disabled = !ok;
+        }
 
-    form.addEventListener("change", sync);
-    form.addEventListener("submit", function (e) {
-      sync();
-      if (submitBtn.disabled) e.preventDefault();
-    });
+        form.addEventListener("change", sync);
+        form.addEventListener("submit", function (e) {
+            sync();
+            if (submitBtn.disabled) e.preventDefault();
+        });
 
-    sync();
-  })();
+        sync();
+    })();
 </script>
 {% endblock %}
