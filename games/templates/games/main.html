@@ -1,96 +1,22 @@
-<!DOCTYPE html>
-<html lang="ko" class="h-full">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Piro Game</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
-        body {
-            font-family: 'Pretendard', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* 메인 컬러 설정 */
-        .color-point-bg {
-            background-color: #cfe6e1;
-        }
-
-        .color-point-text {
-            color: #025309;
-        }
-
-        .color-deep-green {
-            background-color: #025309;
-        }
-
-        /* 배경 이미지 레이어 */
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            opacity: 0.7;
-            background-image: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop');
-            /* 임시 배경 이미지 */
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
-
-<body>
-    <nav>
-        <div class="nav-brand">🃏 Piro Game</div>
-        <div class="nav-links">
-            <a href="{% url 'games:main' %}">홈</a>
-            <a href="{% url 'games:list' %}">게임 전적</a>
-            <a href="{% url 'games:ranking' %}">랭킹</a>
-            <span class="user-info">{{ user.username }}님 환영합니다</span>
-            <a href="/accounts/logout/">로그아웃</a>
+{% extends "base.html" %}
+{% block title %}Home | Piro Card Game{% endblock %}
+{% block content %}
+<section class="home">
+    <div class="home__center">
+        <h1 class="home__title">Piro Game</h1>
+        {% if user.is_authenticated %}
+        <p class="home__sub">{{ user.username }}님이 로그인 중</p>
+        <div class="home__actions">
+            <a class="btn_1" href="/games/attack/">게임시작</a>
+            <a class="btn_1" href="/games/list/">전투기록</a>
         </div>
-    </nav>
-
-    <main class="flex-1 flex flex-col items-center justify-center">
-        <div class="text-center">
-            <h1 class="text-[60px] font-black color-point-text mb-2 tracking-tighter">
-                Piro Game
-            </h1>
-
-            {% if user.is_authenticated %}
-            <p class="text-[14px] color-point-text mb-8 opacity-80">
-                <span class="font-bold underline">{{ user.username }}</span>님만의 전략으로 승리하세요
-            </p>
-
-            <div class="flex flex-col gap-4 items-center">
-                <a href="{% url 'games:attack' %}"
-                    class="w-[120px] py-2 color-deep-green text-white text-[14px] font-bold rounded-full text-center hover:scale-105 transition-transform shadow-lg">
-                    start
-                </a>
-                <a href="{% url 'games:list' %}"
-                    class="w-[120px] py-2 bg-white color-point-text text-[14px] font-bold rounded-full text-center border border-[#cfe6e1] hover:bg-gray-50 transition-colors shadow-sm">
-                    list
-                </a>
-            </div>
-            {% else %}
-            <p class="text-[14px] color-point-text mb-8">로그인 후 카드를 뽑아보세요!</p>
-            <a href="{% url 'account_login' %}"
-                class="w-[150px] py-3 color-deep-green text-white text-[16px] font-bold rounded-full text-center hover:bg-green-900 shadow-xl transition-all">
-                Login to Play
-            </a>
-            {% endif %}
+        {% else %}
+        <p class="home__sub">로그인하고 게임을 시작하세요</p>
+        <div class="home__actions">
+            <a class="btn_1" href="/accounts/login/">로그인</a>
+            <a class="btn_1" href="/accounts/signup/">회원가입</a>
         </div>
-    </main>
-
-    <footer class="w-full h-[35px] color-point-bg flex items-center justify-end px-8 z-10 shadow-inner">
-        <div class="text-[11px] font-bold color-point-text">
-            Pirogrammer Card Game - 피로그래밍 20기 4조
-        </div>
-    </footer>
-
-</body>
-
-</html>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
