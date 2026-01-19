@@ -1,5 +1,4 @@
 from django.urls import path
-
 from .views.main import main
 from .views.attack import attack
 from .views.list import game_list
