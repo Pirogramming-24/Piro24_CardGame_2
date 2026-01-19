@@ -1,126 +1,47 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="h-full">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piro Card Game - Main</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piro Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Pretendard', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        /* 메인 컬러 설정 */
+        .color-point-bg {
+            background-color: #cfe6e1;
         }
-        
-        .nav-brand {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
+
+        .color-point-text {
+            color: #025309;
         }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
+
+        .color-deep-green {
+            background-color: #025309;
         }
-        
-        .nav-links a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: #667eea;
-        }
-        
-        .user-info {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 80px auto;
-            text-align: center;
-            background: white;
-            padding: 60px 80px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-        
-        h1 {
-            color: #667eea;
-            font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        
-        .welcome-msg {
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-        
-        .username {
-            color: #764ba2;
-            font-weight: bold;
-        }
-        
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .btn {
-            padding: 15px 40px;
-            font-size: 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-        
-        .btn-secondary:hover {
-            background: #e0e0e0;
-            transform: translateY(-2px);
+
+        /* 배경 이미지 레이어 */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.7;
+            background-image: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop');
+            /* 임시 배경 이미지 */
+            background-size: cover;
+            background-position: center;
         }
     </style>
 </head>
+
 <body>
     <nav>
         <div class="nav-brand">🃏 Piro Game</div>
@@ -132,17 +53,44 @@
             <a href="/accounts/logout/">로그아웃</a>
         </div>
     </nav>
-    
-    <div class="container">
-        <h1>🃏 Piro Game</h1>
-        <p class="welcome-msg">
-            <span class="username">{{ user.username }}</span>님, 환영합니다!
-        </p>
-        
-        <div class="btn-group">
-            <a href="{% url 'games:attack' %}" class="btn btn-primary">🎮 게임 시작</a>
-            <a href="{% url 'games:list' %}" class="btn btn-secondary">📋 게임 전적</a>
+
+    <main class="flex-1 flex flex-col items-center justify-center">
+        <div class="text-center">
+            <h1 class="text-[60px] font-black color-point-text mb-2 tracking-tighter">
+                Piro Game
+            </h1>
+
+            {% if user.is_authenticated %}
+            <p class="text-[14px] color-point-text mb-8 opacity-80">
+                <span class="font-bold underline">{{ user.username }}</span>님만의 전략으로 승리하세요
+            </p>
+
+            <div class="flex flex-col gap-4 items-center">
+                <a href="{% url 'games:attack' %}"
+                    class="w-[120px] py-2 color-deep-green text-white text-[14px] font-bold rounded-full text-center hover:scale-105 transition-transform shadow-lg">
+                    start
+                </a>
+                <a href="{% url 'games:list' %}"
+                    class="w-[120px] py-2 bg-white color-point-text text-[14px] font-bold rounded-full text-center border border-[#cfe6e1] hover:bg-gray-50 transition-colors shadow-sm">
+                    list
+                </a>
+            </div>
+            {% else %}
+            <p class="text-[14px] color-point-text mb-8">로그인 후 카드를 뽑아보세요!</p>
+            <a href="{% url 'account_login' %}"
+                class="w-[150px] py-3 color-deep-green text-white text-[16px] font-bold rounded-full text-center hover:bg-green-900 shadow-xl transition-all">
+                Login to Play
+            </a>
+            {% endif %}
         </div>
-    </div>
+    </main>
+
+    <footer class="w-full h-[35px] color-point-bg flex items-center justify-end px-8 z-10 shadow-inner">
+        <div class="text-[11px] font-bold color-point-text">
+            Pirogrammer Card Game - 피로그래밍 20기 4조
+        </div>
+    </footer>
+
 </body>
+
 </html>
