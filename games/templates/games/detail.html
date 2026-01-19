@@ -61,7 +61,7 @@
 
           <!-- 버튼(피그마 느낌: 세로 2개) -->
           <div class="result-actions">
-            <a class="pillbtn" href="{% url 'games:list' %}">전적목록</a>
+            <a class="pillbtn" href="{% url 'games:list' %}">전투기록</a>
             <a class="pillbtn pillbtn--ghost" href="{% url 'games:ranking' %}">랭킹보기</a>
           </div>
         </div>
@@ -102,7 +102,7 @@
                 <button type="submit" class="pillbtn">게임취소</button>
               </form>
             {% endif %}
-            <a href="{% url 'games:list' %}" class="pillbtn">전적목록</a>
+            <a href="{% url 'games:list' %}" class="pillbtn">전투기록</a>
           </div>
         </div>
       {% endif %}
