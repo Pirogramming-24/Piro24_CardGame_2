@@ -22,7 +22,7 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', include('games.urls')),
+    path('games/', include('games.urls')),
     path('', lambda request: redirect('games:main')),
 
 ]
