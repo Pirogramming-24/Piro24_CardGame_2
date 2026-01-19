@@ -6,7 +6,9 @@ cryptography==46.0.3
 Django==5.2.10
 django-allauth==65.14.0
 django-environ==0.12.0
+gunicorn==23.0.0
 idna==3.11
+packaging==25.0
 pycparser==2.23
 PyJWT==2.10.1
 requests==2.32.5
