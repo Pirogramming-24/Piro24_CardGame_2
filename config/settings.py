@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,6 +55,32 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
+
+# 1. 환경 변수를 읽어올 객체 생성
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# 2. .env 파일 읽기
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# 3. 기존 SOCIALACCOUNT_PROVIDERS 설정을 DB 의존성 없이 코드로 직접 주입
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_SECRET'),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
