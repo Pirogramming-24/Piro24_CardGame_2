@@ -7,58 +7,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - Piro Game</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         body { 
             font-family: 'Pretendard', sans-serif; 
-            background-color: #f4f7f9; 
+            background-color: #f4f7f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* 입력창 공통 스타일 */
-        input { 
-            width: 100%; 
-            padding: 12px 16px; 
-            margin-top: 4px;
-            margin-bottom: 16px; 
-            border: 1px solid #dfe6e9; 
-            border-radius: 12px; 
-            outline: none;
-            transition: all 0.2s;
-        }
-        input:focus { 
-            border-color: #3498db; 
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); 
+        .auth-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 45px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
         }
 
-        /* 장고 폼 필드 라벨 스타일 */
-        form p {
-            font-size: 14px;
-            font-weight: 600;
+        h1 {
+            font-size: 28px;
             color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* Google 버튼 */
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            background-color: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 12px;
+            color: #2d3436;
+            font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #b2bec3;
+        }
+
+        .google-icon {
+            margin-right: 12px;
+        }
+
+        /* 구분선 */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            color: #b2bec3;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #dfe6e9;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        /* 폼 스타일 */
+        form {
             text-align: left;
         }
 
-        /* 도움말(비밀번호 조건 등) 스타일 */
+        /* 폼 필드 그룹 */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        /* 라벨 스타일 */
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        /* 입력창 스타일 */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dfe6e9;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 도움말 스타일 */
         .helptext {
             display: block;
             font-size: 12px;
             color: #95a5a6;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            text-align: left;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        /* 에러 메시지 */
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+        }
+
+        .errorlist li {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+            background-color: #ffeeed;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+        }
+
+        /* 제출 버튼 */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        /* 하단 링크 */
+        .links {
+            margin-top: 28px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 전역 에러 메시지 */
+        .form-errors {
+            background-color: #ffeeed;
+            border-left: 3px solid #e74c3c;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-errors ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .form-errors li {
+            color: #e74c3c;
+            font-size: 13px;
+            line-height: 1.5;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body>
+    <div class="auth-card">
+        <h1>회원가입</h1>
+        <p class="subtitle">정보를 입력하고 게임을 시작하세요!</p>
 
-    <div class="bg-white w-full max-w-[400px] p-10 rounded-[30px] shadow-lg text-center">
-        <h1 class="text-2xl font-bold text-[#2c3e50] mb-2">회원가입</h1>
-        <p class="text-sm text-[#7f8c8d] mb-8">정보를 입력하고 게임을 시작하세요!</p>
-
-        <a href="{% provider_login_url 'google' %}" class="flex items-center justify-center w-full py-3.5 bg-white border border-[#dfe6e9] rounded-xl text-[#2d3436] font-semibold hover:bg-gray-50 transition-colors mb-6">
-            <svg class="mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                 <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"/>
@@ -67,26 +234,61 @@
             Google로 계속하기
         </a>
 
-        <div class="flex items-center mb-6 text-[#b2bec3] text-xs">
-            <div class="flex-1 h-[1px] bg-[#dfe6e9]"></div>
-            <span class="px-4">또는 직접 정보 입력</span>
-            <div class="flex-1 h-[1px] bg-[#dfe6e9]"></div>
-        </div>
+        <div class="divider"><span>또는 직접 정보 입력</span></div>
 
-        <form method="POST" action="{% url 'account_signup' %}" class="text-left">
+        <form method="POST" action="{% url 'account_signup' %}">
             {% csrf_token %}
             
-            {{ form.as_p }}
+            {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
 
-            <button type="submit" class="w-full py-4 bg-[#3498db] text-white rounded-xl font-bold text-lg mt-4 hover:bg-[#2980b9] transition-all transform hover:-translate-y-0.5 shadow-md">
-                계정 만들기
-            </button>
+            {% if form.email %}
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">이메일 (선택)</label>
+                {{ form.email }}
+                {% if form.email.help_text %}
+                <span class="helptext">{{ form.email.help_text }}</span>
+                {% endif %}
+                {{ form.email.errors }}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">사용자 아이디</label>
+                {{ form.username }}
+                {% if form.username.help_text %}
+                <span class="helptext">{{ form.username.help_text }}</span>
+                {% endif %}
+                {{ form.username.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">비밀번호</label>
+                {{ form.password1 }}
+                {% if form.password1.help_text %}
+                <span class="helptext">{{ form.password1.help_text }}</span>
+                {% endif %}
+                {{ form.password1.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">비밀번호 확인</label>
+                {{ form.password2 }}
+                {% if form.password2.help_text %}
+                <span class="helptext">{{ form.password2.help_text }}</span>
+                {% endif %}
+                {{ form.password2.errors }}
+            </div>
+
+            <button type="submit" class="btn-primary">계정 만들기</button>
         </form>
 
-        <div class="mt-8 text-sm text-[#7f8c8d]">
-            이미 계정이 있으신가요? <a href="{% url 'account_login' %}" class="text-[#3498db] font-bold hover:underline">로그인</a>
+        <div class="links">
+            이미 계정이 있으신가요? <a href="{% url 'account_login' %}">로그인</a>
         </div>
     </div>
-
 </body>
 </html>
