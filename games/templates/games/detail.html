@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+{% block title %}Game Detail | Piro Card Game{% endblock %}
+
+{% block content %}
+<section class="detail">
+  <div class="detail__stage">
+    <div class="detail__panel">
+
+      {% if game.status == 'FINISHED' %}
+        <div class="result-card">
+          <div class="result-title">
+            {{ game.attacker.username }} VS {{ game.defender.username }}
+          </div>
+          <div class="result-line" aria-hidden="true"></div>
+
+          <!-- 결과 pill -->
+
+
+            <span class="rule-pill">
+              {% if game.rule == 'BIGGER_WINS' %}
+                숫자가 큰 사람이 이깁니다
+              {% else %}
+                숫자가 작은 사람이 이깁니다
+              {% endif %}
+            </span>
+     
+
+          <!-- 카드 결과 -->
+          <div class="result-cards">
+            <div class="side">
+              <div class="cardbox">{{ game.attacker_card }}</div>
+              <div class="side__name">{{ game.attacker.username }}</div>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="side">
+              <div class="cardbox">{{ game.defender_card }}</div>
+              <div class="side__name">{{ game.defender.username }}</div>
+            </div>
+          </div>
+
+          <!-- 점수 변화 -->
+          <div class="score-box" role="table" aria-label="score change">
+            <div class="score-row">
+              <div class="score-key">{{ game.attacker.username }}</div>
+              <div class="score-val
+                {% if game.attacker_delta > 0 %}score-pos{% elif game.attacker_delta < 0 %}score-neg{% endif %}">
+                {{ game.attacker_delta|stringformat:"+d" }}점
+              </div>
+            </div>
+
+            <div class="score-row">
+              <div class="score-key">{{ game.defender.username }}</div>
+              <div class="score-val
+                {% if game.defender_delta > 0 %}score-pos{% elif game.defender_delta < 0 %}score-neg{% endif %}">
+                {{ game.defender_delta|stringformat:"+d" }}점
+              </div>
+            </div>
+          </div>
+
+          <!-- 버튼(피그마 느낌: 세로 2개) -->
+          <div class="result-actions">
+            <a class="pillbtn" href="{% url 'games:list' %}">전투기록</a>
+            <a class="pillbtn pillbtn--ghost" href="{% url 'games:ranking' %}">랭킹보기</a>
+          </div>
+        </div>
+
+      {% else %}
+        {# === 진행중 pending-card: 너가 쓰던 그대로 두기 === #}
+        <div class="pending-card">
+          <div class="pending-title">
+            {{ game.attacker.username }} VS {{ game.defender.username }}
+          </div>
+          <div class="pending-line" aria-hidden="true"></div>
+
+          <div class="pending-table" role="table" aria-label="game status table">
+            <div class="pending-row" role="row">
+              <div class="pending-key" role="cell">상태</div>
+              <div class="pending-val pending-val--blue" role="cell">진행 중</div>
+            </div>
+
+            <div class="pending-row" role="row">
+              <div class="pending-key" role="cell">내 카드</div>
+              <div class="pending-val pending-val--red" role="cell">
+                {% if game.attacker == user %}
+                  {{ game.attacker_card }}
+                {% else %}
+                  {% if game.defender_card %}{{ game.defender_card }}{% else %}-{% endif %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="pending-actions">
+            {% if game.attacker == user %}
+              <form method="post"
+                    action="{% url 'games:delete' game.id %}"
+                    class="pending-inline"
+                    onsubmit="return confirm('정말 이 게임을 취소하시겠습니까?');">
+                {% csrf_token %}
+                <button type="submit" class="pillbtn">게임취소</button>
+              </form>
+            {% endif %}
+            <a href="{% url 'games:list' %}" class="pillbtn">전투기록</a>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== 공통 배치 (attack/list/detail 컨셉 통일) ===== */
+  .detail__stage{
+    position: relative;
+    min-height: calc(100vh - 80px);
+    padding: 56px 16px;
+    display: grid;
+    place-items: center;
+  }
+
+  /* ===== 공통 pill 버튼 (초록 컨셉 통일) ===== */
+  .pillbtn{
+    width: 180px;
+    height: 45px;
+    border-radius: 999px;
+    border: none;
+    background: #025309;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: .4px;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pillbtn--ghost{
+    background: rgba(0,0,0,.10);
+    color: rgba(0,0,0,.75);
+  }
+
+  /* =========================
+      FINISHED : 결과 카드
+     ========================= */
+  .result-card{
+    width: min(520px, 95vw);
+    background: #F7F6F2;
+    border-radius: 16px;
+    padding: 26px 24px 22px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    display: grid;
+    gap: 14px;
+  }
+
+  .result-title{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    color: #111;
+  }
+
+  .result-line{
+    height: 2px;
+    width: 100%;
+    background: rgba(0,0,0,.65);
+    border-radius: 2px;
+    margin-top: -6px;
+  }
+
+  .result-top{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .result-pill,
+  .rule-pill{
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 20px;
+    color: black;
+    white-space: nowrap;
+    display:block;
+    text-align:center;
+    
+
+  }
+
+  .result-pill--win{ background: rgba(11,95,42,.14); color: rgba(11,95,42,.92); }
+  .result-pill--lose{ background: rgba(180,30,30,.12); color: rgba(180,30,30,.92); }
+  .result-pill--draw{ background: rgba(0,0,0,.10); color: rgba(0,0,0,.70); }
+
+  .result-cards{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .vs{
+    font-weight: 900;
+    font-size: 30px;
+    color: rgba(0,0,0,.70);
+    text-align: center;
+  }
+
+  .side{
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+  }
+
+  .side__label{
+    font-size: 20px;
+    font-weight: 900;
+    color: rgba(0,0,0,.55);
+    letter-spacing: .4px;
+  }
+
+  .cardbox{
+    font-size:40px;
+    width: 88px;
+    height: 120px;
+    border-radius: 14px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    color: #111;
+
+}
+
+  .side__name{
+    font-size: 20px;
+    font-weight: 800;
+    color: rgba(0,0,0,.60);
+  }
+
+  .score-box{
+    border: 3px solid rgba(0,0,0,.14);
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255,255,255,.9);
+    margin-top: 2px;
+  }
+
+  .score-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .score-row + .score-row{
+    border-top: 2px solid rgba(0,0,0,.10);
+  }
+
+  .score-key, .score-val{
+    padding: 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 18px;
+  }
+
+  .score-key{
+    background: rgba(0,0,0,.02);
+    color: rgba(0,0,0,.75);
+  }
+
+  .score-pos{ color: rgba(11,95,42,.92); }
+  .score-neg{ color: rgba(180,30,30,.92); }
+
+  .result-actions{
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+    margin-top: 6px;
+  }
+
+  /* =========================
+      진행중 : pending-card (네 스타일 유지)
+     ========================= */
+  .pending-card{
+    width: min(450px, 95vw);
+    min-height: 320px;
+    background: #F7F6F2;
+    border-radius: 16px;
+    padding: 24px 22px 18px;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pending-title{
+    text-align: center;
+    font-weight: 900;
+    color: #111;
+    font-size:25px;
+  }
+
+  .pending-line{
+    height: 2px;
+    width: 100%;
+    background: rgba(0,0,0,.65);
+    border-radius: 2px;
+    margin: 10px 0 16px;
+  }
+
+  .pending-table{
+    border: 3px solid rgba(0,0,0,.14);
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255,255,255,.9);
+    margin-top: auto;
+  }
+
+  .pending-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pending-row + .pending-row{
+    border-top: 2px solid rgba(0,0,0,.10);
+  }
+
+  .pending-key,
+  .pending-val{
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  .pending-key{
+    color: rgba(0,0,0,.75);
+    background: rgba(0,0,0,.02);
+  }
+
+  .pending-val{ color: #111; }
+  .pending-val--blue{ color: #1e66ff; }
+  .pending-val--red{ color: #d12c2c; font-size: 26px; }
+
+  .pending-actions{
+    display: grid;
+    gap: 15px;
+    margin-top: auto;
+    padding-top: 18px;
+    justify-items: center;
+  }
+
+  .pending-inline{ margin: 0; }
+</style>
+{% endblock %}

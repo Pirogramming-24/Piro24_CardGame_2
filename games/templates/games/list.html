@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block title %}Match History | Piro Card Game{% endblock %}
+
+{% block content %}
+<section class="history">
+  <div class="history__stage">
+    <div class="history__panel">
+      <p class="history__me">현재 플레이어 : <strong>{{ user.username }}</strong></p>
+
+      <ul class="history__list">
+        {% if games %}
+          {% for game in games %}
+            <li class="history__row">
+              <!-- 왼쪽: 매치업 -->
+              <div class="history__matchup">
+                <div class="history__names">
+                  <span class="{% if game.attacker == user %}me{% endif %}">
+                    {{ game.attacker.username }}
+                  </span>
+                  <span class="vs">VS</span>
+                  <span class="{% if game.defender == user %}me{% endif %}">
+                    {{ game.defender.username }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- 가운데: 상태 -->
+              <div class="history__state">
+                {% if game.status == 'PENDING' %}
+                  {% if game.defender == user %}
+                    <a class="pill pill--action" href="{% url 'games:counter' game.id %}">
+                      COUNTER ATTACK
+                    </a>
+                  {% elif game.attacker == user %}
+                    <span class="pill pill--muted">NOW PLAYING...</span>
+
+                   
+                  {% else %}
+                    <span class="pill pill--muted">NOW PLAYING...</span>
+                  {% endif %}
+                {% else %}
+                  {# DONE/FINISHED 등 종료 상태 #}
+                  {% if game.winner == 'ATTACKER' %}
+                    {% if game.attacker == user %}
+                      <span class="result result--win">👑 WIN 👑</span>
+                    {% else %}
+                      <span class="result result--lose">😢 LOSE 😢</span>
+                    {% endif %}
+                  {% elif game.winner == 'DEFENDER' %}
+                    {% if game.defender == user %}
+                      <span class="result result--win">👑 WIN 👑</span>
+                    {% else %}
+                      <span class="result result--lose">😢 LOSE 😢</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="result result--draw">🤝 DRAW 🤝</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              <!-- 오른쪽: GAME INFO -->
+              <div class="history__info">
+                <a class="btn-info" href="{% url 'games:detail' game.id %}">GAME INFO</a>
+              </div>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li class="history__empty">게임 내역이 없습니다.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* === 배경(피그마 민트 밴드 + 부드러운 배경) === */
+  .history__stage{
+    position: relative;
+    min-height: calc(100vh - 80px);
+    padding: 44px 16px 56px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .history__stage::before{
+    content:"";
+    position:absolute;
+    inset: 90px 0 90px 0;
+    pointer-events:none;
+  }
+
+  /* === 중앙 큰 박스(피그마) === */
+  .history__panel{
+    position: relative;
+    width: min(1050px, 92vw);
+    background: #F7F6F2;
+    border-radius: 18px;
+    padding: 22px 24px 18px;
+    backdrop-filter: blur(6px);
+  }
+
+  .history__me{
+    margin: 0 0 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: rgba(0,0,0,.75);
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0,0,0,.12);
+  }
+
+  /* === 리스트 === */
+  .history__list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 15px;
+  }
+
+  /* 한 줄(피그마: 좌/중/우 3열) */
+  .history__row{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 220px;
+    align-items: center;
+    gap: 18px;
+
+    padding: 10px 10px;
+    border-radius: 12px;
+  }
+
+  .history__names{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: rgba(0,0,0,.82);
+  }
+
+  .vs{
+    font-weight: 900;
+    color: black;
+  }
+
+  .me{
+    font-weight: 900;
+    color:black;
+    text-underline-offset: 3px;
+  }
+
+  /* 가운데 상태 영역 */
+  .history__state{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* pill */
+  .pill{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 18px;
+    font-weight: 900;
+    border: 2px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .pill--muted{
+    background: transparent;
+    border-color: transparent;  
+    color: #111;                  
+    padding: 0; 
+  }
+
+  .pill--action{
+    background: #025309;
+    color: #fff;
+    width: 200px;
+    height: 45px;
+  }
+
+  .pill--ghost{
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .inline{ display: inline; margin: 0; }
+
+  .result{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 20px;
+    font-weight: 900;
+    color: black;
+    white-space: nowrap;
+  }
+
+
+
+  /* 오른쪽 GAME INFO*/
+  .history__info{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-info{
+    width: 200px;
+    height: 45px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background:#025309;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: .4px;
+  }
+
+
+  .history__empty{
+    padding: 24px 12px;
+    text-align: center;
+    color: rgba(0,0,0,.55);
+    font-weight: 800;
+  }
+
+  
+</style>
+{% endblock %}

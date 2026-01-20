@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .  
+    image: abanolja/piro-cardgame:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  
